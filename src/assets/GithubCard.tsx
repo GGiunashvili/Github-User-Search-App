@@ -13,7 +13,7 @@ interface User {
 }
 
 const fetchGitHubUser = async (username: string): Promise<User> => {
-  const token = import.meta.env.VITE_GITHUB_TOKEN;
+  const token = process.env.VITE_GITHUB_TOKEN;
 
   const response = await fetch(`https://api.github.com/users/${username}`, {
     method: "GET",
@@ -107,14 +107,20 @@ export default function GithubCard() {
         onChange={(event) => setUsername(event.target.value)} // Updates username and triggers re-fetch
         type="text"
         placeholder="Enter GitHub username"
-        className="bg-blue-200 p-2 mb-4"
+        className=" max-w-screen-lg mx-auto w-full rounded-2xl bg-blue-200 p-2 mb-4"
         value={username}
       />
       {isLoading && <div>Loading...</div>}
       {error && <div>Error: {error}</div>}
       {user && (
-        <div className="max-w-screen-lg mx-auto grid grid-cols-6 gap-4">
-          <div className="col-start-1 col-end-3 bg-purple-100 grid place-items-center">
+        <div
+          className="max-w-screen-lg mx-auto grid grid-cols-6 gap-4 p-12  rounded-2xl"
+          style={{
+            boxShadow: "0px 16px 30px -10px rgba(70, 96, 187, 0.1986)",
+            backgroundColor: "#C6E7FF",
+          }}
+        >
+          <div className="col-start-1 col-end-3 grid place-items-center">
             {user.avatar_url ? (
               <img
                 src={user.avatar_url}
@@ -126,19 +132,21 @@ export default function GithubCard() {
               "No Avatar"
             )}
           </div>
-          <div className="col-end-7 col-span-4 bg-purple-100">
-            {user.name || "No Name Provided"}
+          <div className="col-end-7 col-span-4">
+            <div>{user.name || "No Name Provided"}</div>
+            <div className=" col-span-6 lg:col-span-4 lg:col-end-7  mb-8">
+              {user.created_at
+                ? `Created at: ${new Date(
+                    user.created_at
+                  ).toLocaleDateString()}`
+                : "No Creation Date"}
+            </div>
           </div>
-          <div className="col-end-7 col-span-4 bg-purple-100">
-            {user.created_at
-              ? `Created at: ${new Date(user.created_at).toLocaleDateString()}`
-              : "No Creation Date"}
-          </div>
-          <div className="col-end-7 col-span-4 bg-purple-100">
+          <div className=" col-span-6 lg:col-span-4 lg:col-end-7 mb-8">
             {user.bio || "No Bio Available"}
           </div>
 
-          <div className="col-end-7 col-span-4 bg-purple-100">
+          <div className=" col-span-6 lg:col-span-4 lg:col-end-7 bg-[#F6F8FF] px-8 py-4 mb-9 rounded-xl	">
             <p>Repos: {reposCount !== null ? reposCount : "Loading..."}</p>
             <p>
               Followers:{" "}
@@ -150,7 +158,7 @@ export default function GithubCard() {
             </p>
           </div>
 
-          <div className="col-end-7 col-span-4 bg-purple-100">
+          <div className=" col-span-6 lg:col-span-4 lg:col-end-7">
             <p> {user.location || "No Bio Available"}</p>
             <p> {user.company || "No Bio Available"}</p>
           </div>
